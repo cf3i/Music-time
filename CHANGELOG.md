@@ -10,6 +10,7 @@
 - Unit tests for lifecycle behavior, generated audio signals, smoothing, reset, settings validation, and processing headroom
 - Swift 6 concurrency checking
 - Native Xcode macOS application target and shared Run/Profile/Archive scheme
+- Unified logging for capture lifecycle and permission diagnostics
 
 ### Changed
 

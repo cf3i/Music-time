@@ -1,5 +1,6 @@
 import AppKit
 import Combine
+import OSLog
 import SwiftUI
 
 @main
@@ -39,6 +40,7 @@ final class AppModel: ObservableObject {
 
     private lazy var overlays = OverlayManager(analyzer: analyzer, settings: settings)
     private lazy var capture = SystemAudioCapture()
+    private let logger = Logger(subsystem: "com.cf3i.edgepulse", category: "app")
     private var cancellables = Set<AnyCancellable>()
     private var retryTask: Task<Void, Never>?
     private var retryAttempt = 0
@@ -119,6 +121,7 @@ final class AppModel: ObservableObject {
     }
 
     private func setEnabled(_ enabled: Bool) {
+        logger.info("Enabled changed to \(enabled, privacy: .public)")
         if enabled {
             retryTask?.cancel()
             retryAttempt = 0
@@ -141,22 +144,27 @@ final class AppModel: ObservableObject {
     private func applyCaptureState(_ state: SystemAudioCapture.State) {
         switch state {
         case .idle:
+            logger.info("Capture state: idle")
             if settings.enabled {
                 status = isSleeping ? "Sleeping" : "Stopped"
             }
         case .starting:
+            logger.info("Capture state: starting")
             status = "Connecting to system audio…"
             needsPermission = false
         case .running:
+            logger.info("Capture state: running")
             retryTask?.cancel()
             retryAttempt = 0
             status = "Listening to system audio"
             needsPermission = false
         case .permissionRequired:
+            logger.notice("Capture state: permission required")
             retryTask?.cancel()
             status = "Screen & System Audio permission required"
             needsPermission = true
         case .failed(let message):
+            logger.error("Capture state: failed — \(message, privacy: .public)")
             needsPermission = false
             scheduleRetry(after: message)
         }
