@@ -18,13 +18,16 @@ open build/EdgePulse.app
 
 On macOS 14.2 and later, allow EdgePulse under **System Audio Recording Only**. If it is not listed, use the `+` button in that section and select `build/EdgePulse.app`. On macOS 13–14.1, approve **Screen & System Audio Recording** instead. The app has no Dock icon; use the waveform icon in the menu bar.
 
-## MVP controls
+## Controls
 
 - **Enabled** starts or stops capture and shows or hides the overlay.
+- **Look** applies the Halo, Glass, or Pulse visual preset.
 - **Opacity** changes the brightness/transparency of the whole overlay.
 - **Density** changes the number of frequency bars (16–128).
 - **Amplitude** changes their maximum height.
 - **Smoothing** changes how quickly bars decay.
+- **Glow** changes the ambient halo and bloom strength.
+- **Bar width** changes the geometry and spacing of the spectrum.
 
 Settings persist automatically in `UserDefaults`.
 

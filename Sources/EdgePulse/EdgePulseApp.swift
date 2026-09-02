@@ -11,7 +11,8 @@ struct EdgePulseApp: App {
         MenuBarExtra {
             ControlPanelView(model: AppModel.shared)
         } label: {
-            Label("EdgePulse", systemImage: "waveform.path.ecg")
+            MenuBarPulseIcon()
+                .accessibilityLabel("EdgePulse")
         }
         .menuBarExtraStyle(.window)
     }

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="background" x1="120" y1="80" x2="900" y2="940" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#192750"/>
+      <stop offset="0.52" stop-color="#10162D"/>
+      <stop offset="1" stop-color="#070A16"/>
+    </linearGradient>
+    <radialGradient id="aura" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(512 638) rotate(90) scale(400)">
+      <stop offset="0" stop-color="#C8E6FF" stop-opacity="0.34"/>
+      <stop offset="0.42" stop-color="#8CB5FF" stop-opacity="0.13"/>
+      <stop offset="1" stop-color="#7793FF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bar" x1="0" y1="250" x2="0" y2="770" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#D9EEFF"/>
+    </linearGradient>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="24" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect x="40" y="40" width="944" height="944" rx="222" fill="url(#background)"/>
+  <rect x="41" y="41" width="942" height="942" rx="221" fill="none" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="2"/>
+  <circle cx="512" cy="628" r="410" fill="url(#aura)"/>
+
+  <g opacity="0.28" filter="url(#glow)" fill="#C8E6FF">
+    <rect x="250" y="438" width="72" height="258" rx="36"/>
+    <rect x="363" y="326" width="72" height="370" rx="36"/>
+    <rect x="476" y="220" width="72" height="476" rx="36"/>
+    <rect x="589" y="374" width="72" height="322" rx="36"/>
+    <rect x="702" y="290" width="72" height="406" rx="36"/>
+  </g>
+  <g fill="url(#bar)">
+    <rect x="250" y="438" width="72" height="258" rx="36"/>
+    <rect x="363" y="326" width="72" height="370" rx="36"/>
+    <rect x="476" y="220" width="72" height="476" rx="36"/>
+    <rect x="589" y="374" width="72" height="322" rx="36"/>
+    <rect x="702" y="290" width="72" height="406" rx="36"/>
+  </g>
+  <rect x="210" y="750" width="604" height="10" rx="5" fill="#FFFFFF" fill-opacity="0.23"/>
+</svg>

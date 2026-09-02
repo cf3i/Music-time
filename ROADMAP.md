@@ -2,7 +2,7 @@
 
 The runnable MVP is tagged `v0.1.0-mvp`. The next five milestones intentionally stabilize the core before expanding the visual surface.
 
-## v0.2.0 — Pulse Core
+## v0.2.0 — Pulse Core ✅
 
 - Race-free, cancellable ScreenCaptureKit lifecycle
 - Recovery after stream interruption, display changes, sleep, and wake
@@ -12,7 +12,7 @@ The runnable MVP is tagged `v0.1.0-mvp`. The next five milestones intentionally 
 - Unit tests for lifecycle, spectrum behavior, and settings validation
 - CPU, memory, and long-running reliability baselines
 
-## v0.3.0 — Lumen
+## v0.3.0 — Lumen ✅
 
 - Refined menu-bar control panel and visual design system
 - Layered glow, bar geometry, spacing, and graceful silence transitions

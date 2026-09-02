@@ -23,6 +23,7 @@
 		A10000000000000000000016 /* ScreenCaptureKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000016 /* ScreenCaptureKit.framework */; };
 		A10000000000000000000017 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000017 /* SwiftUI.framework */; };
 		A10000000000000000000018 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000018 /* CoreAudio.framework */; };
+		A10000000000000000000019 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000019 /* AppIcon.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		A20000000000000000000016 /* ScreenCaptureKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScreenCaptureKit.framework; path = System/Library/Frameworks/ScreenCaptureKit.framework; sourceTree = SDKROOT; };
 		A20000000000000000000017 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		A20000000000000000000018 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		A20000000000000000000019 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Assets/AppIcon.icns; sourceTree = "<group>"; };
 		A20000000000000000000020 /* EdgePulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EdgePulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -77,6 +79,7 @@
 				A2000000000000000000000A /* README.md */,
 				A2000000000000000000000B /* ROADMAP.md */,
 				A2000000000000000000000C /* CHANGELOG.md */,
+				A20000000000000000000019 /* AppIcon.icns */,
 				A40000000000000000000004 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -177,6 +180,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10000000000000000000019 /* AppIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,7 +249,7 @@
 				CODE_SIGN_IDENTITY = "EdgePulse Local Development";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Info.plist;
@@ -253,7 +257,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				OTHER_CODE_SIGN_FLAGS = "--keychain=$(SRCROOT)/.local-signing/EdgePulseLocal.keychain-db";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cf3i.edgepulse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -267,7 +271,7 @@
 				CODE_SIGN_IDENTITY = "EdgePulse Local Development";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Info.plist;
@@ -275,7 +279,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				OTHER_CODE_SIGN_FLAGS = "--keychain=$(SRCROOT)/.local-signing/EdgePulseLocal.keychain-db";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cf3i.edgepulse;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -37,6 +37,9 @@ rm -rf "$APP_DIR"
 mkdir -p "$CONTENTS_DIR/MacOS" "$CONTENTS_DIR/Resources"
 cp "$PROJECT_DIR/Info.plist" "$CONTENTS_DIR/Info.plist"
 cp "$BIN_DIR/EdgePulse" "$CONTENTS_DIR/MacOS/EdgePulse"
+if [[ -f "$PROJECT_DIR/Assets/AppIcon.icns" ]]; then
+    cp "$PROJECT_DIR/Assets/AppIcon.icns" "$CONTENTS_DIR/Resources/AppIcon.icns"
+fi
 chmod +x "$CONTENTS_DIR/MacOS/EdgePulse"
 
 if [[ -n "$SIGNING_KEYCHAIN" ]]; then

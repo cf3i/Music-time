@@ -1,6 +1,21 @@
 # Changelog
 
-## 0.2.0 — Unreleased
+## 0.3.0 — 2026-09-03
+
+### Added
+
+- Lumen control-panel design with adaptive materials, clear capture status, and accessible labels
+- Halo, Glass, and Pulse visual presets with automatic Custom-state tracking
+- Adjustable layered glow and bar-width controls
+- A custom monochrome menu-bar mark and a complete Finder app icon
+- Reduced-motion and reduced-transparency treatments for the overlay
+
+### Changed
+
+- Rebuilt the bar renderer with an ambient edge halo, separate bloom and core layers, smoother geometry, and graceful silence fade
+- Grouped controls into a compact visual hierarchy while preserving every MVP control
+
+## 0.2.0 — 2026-09-03
 
 ### Added
 
