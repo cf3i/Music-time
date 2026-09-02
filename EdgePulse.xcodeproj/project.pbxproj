@@ -22,6 +22,7 @@
 		A10000000000000000000015 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000015 /* CoreMedia.framework */; };
 		A10000000000000000000016 /* ScreenCaptureKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000016 /* ScreenCaptureKit.framework */; };
 		A10000000000000000000017 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000017 /* SwiftUI.framework */; };
+		A10000000000000000000018 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000018 /* CoreAudio.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +38,6 @@
 		A2000000000000000000000A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A2000000000000000000000B /* ROADMAP.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ROADMAP.md; sourceTree = "<group>"; };
 		A2000000000000000000000C /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
-		A2000000000000000000000D /* EdgePulse.requirements */ = {isa = PBXFileReference; lastKnownFileType = text; path = EdgePulse.requirements; sourceTree = "<group>"; };
 		A20000000000000000000011 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		A20000000000000000000012 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		A20000000000000000000013 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -45,6 +45,7 @@
 		A20000000000000000000015 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		A20000000000000000000016 /* ScreenCaptureKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScreenCaptureKit.framework; path = System/Library/Frameworks/ScreenCaptureKit.framework; sourceTree = SDKROOT; };
 		A20000000000000000000017 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		A20000000000000000000018 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		A20000000000000000000020 /* EdgePulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EdgePulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -60,6 +61,7 @@
 				A10000000000000000000015 /* CoreMedia.framework in Frameworks */,
 				A10000000000000000000016 /* ScreenCaptureKit.framework in Frameworks */,
 				A10000000000000000000017 /* SwiftUI.framework in Frameworks */,
+				A10000000000000000000018 /* CoreAudio.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,7 +72,6 @@
 			isa = PBXGroup;
 			children = (
 				A40000000000000000000002 /* EdgePulse */,
-				A40000000000000000000005 /* Config */,
 				A40000000000000000000003 /* Frameworks */,
 				A20000000000000000000009 /* Info.plist */,
 				A2000000000000000000000A /* README.md */,
@@ -105,6 +106,7 @@
 				A20000000000000000000015 /* CoreMedia.framework */,
 				A20000000000000000000016 /* ScreenCaptureKit.framework */,
 				A20000000000000000000017 /* SwiftUI.framework */,
+				A20000000000000000000018 /* CoreAudio.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -115,14 +117,6 @@
 				A20000000000000000000020 /* EdgePulse.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		A40000000000000000000005 /* Config */ = {
-			isa = PBXGroup;
-			children = (
-				A2000000000000000000000D /* EdgePulse.requirements */,
-			);
-			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -248,7 +242,7 @@
 		A80000000000000000000003 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "EdgePulse Local Development";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2;
@@ -260,7 +254,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.2.0;
-				OTHER_CODE_SIGN_FLAGS = "--requirements=$(SRCROOT)/Config/EdgePulse.requirements";
+				OTHER_CODE_SIGN_FLAGS = "--keychain=$(SRCROOT)/.local-signing/EdgePulseLocal.keychain-db";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cf3i.edgepulse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_STRICT_CONCURRENCY = complete;
@@ -270,7 +264,7 @@
 		A80000000000000000000004 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "EdgePulse Local Development";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2;
@@ -282,7 +276,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.2.0;
-				OTHER_CODE_SIGN_FLAGS = "--requirements=$(SRCROOT)/Config/EdgePulse.requirements";
+				OTHER_CODE_SIGN_FLAGS = "--keychain=$(SRCROOT)/.local-signing/EdgePulseLocal.keychain-db";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cf3i.edgepulse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_STRICT_CONCURRENCY = complete;

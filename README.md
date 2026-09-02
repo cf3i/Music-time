@@ -1,6 +1,6 @@
 # EdgePulse
 
-EdgePulse is a menu-bar-only macOS audio visualizer. It listens to system audio with ScreenCaptureKit and draws a click-through, always-on-top white spectrum along the bottom edge of every display. Audio is analyzed locally and is never recorded or uploaded.
+EdgePulse is a menu-bar-only macOS audio visualizer. It listens to system audio and draws a click-through, always-on-top white spectrum along the bottom edge of every display. On macOS 14.2 and later it uses a Core Audio process tap, with ScreenCaptureKit retained as the macOS 13–14.1 fallback. Audio is analyzed locally and is never recorded or uploaded.
 
 ## Requirements
 
@@ -11,11 +11,12 @@ EdgePulse is a menu-bar-only macOS audio visualizer. It listens to system audio 
 
 ```bash
 cd ~/Pjs/EdgePulse
+./scripts/setup-local-signing.sh
 ./scripts/build-app.sh
 open build/EdgePulse.app
 ```
 
-On first launch, macOS asks for **Screen & System Audio Recording** access. Approve EdgePulse, quit it, and open it again. The app has no Dock icon; use the waveform icon in the menu bar.
+On macOS 14.2 and later, allow EdgePulse under **System Audio Recording Only**. If it is not listed, use the `+` button in that section and select `build/EdgePulse.app`. On macOS 13–14.1, approve **Screen & System Audio Recording** instead. The app has no Dock icon; use the waveform icon in the menu bar.
 
 ## MVP controls
 
@@ -49,8 +50,8 @@ For a fast compile check without packaging:
 swift build
 ```
 
-The local app bundle uses an ad-hoc signature with an explicit stable designated requirement for `com.cf3i.edgepulse`. This keeps Screen & System Audio permission stable across local rebuilds. A production build must use an Apple Development or Developer ID identity instead; set `EDGEPULSE_SIGNING_IDENTITY` when invoking the build script to select one.
+Run `setup-local-signing.sh` once to create a self-signed development identity in the ignored `.local-signing` directory. macOS asks for one administrator confirmation to trust that certificate for code signing only. This gives the app a stable cryptographic identity so its privacy permission survives local rebuilds. The identity is only for development on this Mac and is not trusted for distribution. Production builds must use Apple Development or Developer ID signing; set `EDGEPULSE_SIGNING_IDENTITY` and optionally `EDGEPULSE_SIGNING_KEYCHAIN` when invoking the build script.
 
-On macOS 26, System Settings separates **System Audio Recording Only** from broader screen recording access. Turn on EdgePulse in that lower list, return to the menu-bar panel, and choose **Try Again**. The app does not need microphone access.
+On macOS 26, System Settings separates **System Audio Recording Only** from broader screen recording access. EdgePulse uses the narrower audio-only permission. It does not need microphone access.
 
 See [ROADMAP.md](ROADMAP.md) for the path from the current core-stability work to the public beta.

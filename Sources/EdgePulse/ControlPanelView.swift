@@ -84,7 +84,7 @@ struct ControlPanelView: View {
                     }
                 }
 
-                Text("In Privacy Settings, turn on EdgePulse under System Audio Recording Only, then return here and choose Try Again.")
+                Text("Under System Audio Recording Only, use + to add this EdgePulse app if it is not listed, or turn it on. Then return here and choose Try Again.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)

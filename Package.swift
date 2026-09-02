@@ -19,6 +19,7 @@ let package = Package(
             linkerSettings: [
                 .linkedFramework("Accelerate"),
                 .linkedFramework("AppKit"),
+                .linkedFramework("CoreAudio"),
                 .linkedFramework("ScreenCaptureKit")
             ]
         ),
