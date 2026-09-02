@@ -9,6 +9,7 @@
 - Sample-rate-aware 4,096-point FFT processor with a 1,024-sample hop
 - Unit tests for lifecycle behavior, generated audio signals, smoothing, reset, and settings validation
 - Swift 6 concurrency checking
+- Native Xcode macOS application target and shared Run/Profile/Archive scheme
 
 ### Changed
 

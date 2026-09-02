@@ -29,6 +29,8 @@ Settings persist automatically in `UserDefaults`.
 
 ## Development
 
+Open `EdgePulse.xcodeproj` for the native macOS app target, Run, Profile, and Archive workflows. The Swift package remains the fast path for core builds and tests.
+
 Run the full unit test suite:
 
 ```bash

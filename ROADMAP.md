@@ -8,6 +8,7 @@ The runnable MVP is tagged `v0.1.0-mvp`. The next five milestones intentionally 
 - Recovery after stream interruption, display changes, sleep, and wake
 - Allocation-conscious FFT ring buffer and sample-rate-aware band mapping
 - Swift 6 concurrency checks
+- Native Xcode app target with shared Run, Profile, and Archive scheme
 - Unit tests for lifecycle, spectrum behavior, and settings validation
 - CPU, memory, and long-running reliability baselines
 

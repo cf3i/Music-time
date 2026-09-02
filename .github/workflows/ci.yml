@@ -13,3 +13,5 @@ jobs:
         run: swift --version
       - name: Test release build
         run: swift test -c release
+      - name: Build native Xcode app
+        run: xcodebuild -project EdgePulse.xcodeproj -scheme EdgePulse -configuration Release CODE_SIGNING_ALLOWED=NO build
