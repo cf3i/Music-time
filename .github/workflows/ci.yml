@@ -1,0 +1,26 @@
+name: macOS CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Show Swift version
+        run: swift --version
+      - name: Test release build
+        run: swift test -c release
+      - name: Build native Xcode app
+        run: xcodebuild -project EdgePulse.xcodeproj -scheme EdgePulse -configuration Release CODE_SIGNING_ALLOWED=NO build

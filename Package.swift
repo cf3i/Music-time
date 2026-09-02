@@ -14,13 +14,18 @@ let package = Package(
         .executableTarget(
             name: "EdgePulse",
             swiftSettings: [
-                .swiftLanguageMode(.v5)
+                .swiftLanguageMode(.v6)
             ],
             linkerSettings: [
                 .linkedFramework("Accelerate"),
                 .linkedFramework("AppKit"),
+                .linkedFramework("CoreAudio"),
                 .linkedFramework("ScreenCaptureKit")
             ]
+        ),
+        .testTarget(
+            name: "EdgePulseTests",
+            dependencies: ["EdgePulse"]
         )
     ]
 )

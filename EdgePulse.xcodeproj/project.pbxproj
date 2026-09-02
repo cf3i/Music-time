@@ -1,0 +1,310 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* AudioAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* AudioAnalyzer.swift */; };
+		A10000000000000000000002 /* CaptureLifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* CaptureLifecycle.swift */; };
+		A10000000000000000000003 /* ControlPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000003 /* ControlPanelView.swift */; };
+		A10000000000000000000004 /* EdgePulseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* EdgePulseApp.swift */; };
+		A10000000000000000000005 /* OverlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* OverlayManager.swift */; };
+		A10000000000000000000006 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000006 /* SettingsStore.swift */; };
+		A10000000000000000000007 /* SpectrumProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* SpectrumProcessor.swift */; };
+		A10000000000000000000008 /* SystemAudioCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* SystemAudioCapture.swift */; };
+		A10000000000000000000011 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000011 /* Accelerate.framework */; };
+		A10000000000000000000012 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000012 /* AppKit.framework */; };
+		A10000000000000000000013 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000013 /* AudioToolbox.framework */; };
+		A10000000000000000000014 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000014 /* CoreGraphics.framework */; };
+		A10000000000000000000015 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000015 /* CoreMedia.framework */; };
+		A10000000000000000000016 /* ScreenCaptureKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000016 /* ScreenCaptureKit.framework */; };
+		A10000000000000000000017 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000017 /* SwiftUI.framework */; };
+		A10000000000000000000018 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000018 /* CoreAudio.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A20000000000000000000001 /* AudioAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioAnalyzer.swift; sourceTree = "<group>"; };
+		A20000000000000000000002 /* CaptureLifecycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureLifecycle.swift; sourceTree = "<group>"; };
+		A20000000000000000000003 /* ControlPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelView.swift; sourceTree = "<group>"; };
+		A20000000000000000000004 /* EdgePulseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgePulseApp.swift; sourceTree = "<group>"; };
+		A20000000000000000000005 /* OverlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayManager.swift; sourceTree = "<group>"; };
+		A20000000000000000000006 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+		A20000000000000000000007 /* SpectrumProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpectrumProcessor.swift; sourceTree = "<group>"; };
+		A20000000000000000000008 /* SystemAudioCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAudioCapture.swift; sourceTree = "<group>"; };
+		A20000000000000000000009 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2000000000000000000000A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		A2000000000000000000000B /* ROADMAP.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ROADMAP.md; sourceTree = "<group>"; };
+		A2000000000000000000000C /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		A20000000000000000000011 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		A20000000000000000000012 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		A20000000000000000000013 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		A20000000000000000000014 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		A20000000000000000000015 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		A20000000000000000000016 /* ScreenCaptureKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScreenCaptureKit.framework; path = System/Library/Frameworks/ScreenCaptureKit.framework; sourceTree = SDKROOT; };
+		A20000000000000000000017 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		A20000000000000000000018 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		A20000000000000000000020 /* EdgePulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EdgePulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A30000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000011 /* Accelerate.framework in Frameworks */,
+				A10000000000000000000012 /* AppKit.framework in Frameworks */,
+				A10000000000000000000013 /* AudioToolbox.framework in Frameworks */,
+				A10000000000000000000014 /* CoreGraphics.framework in Frameworks */,
+				A10000000000000000000015 /* CoreMedia.framework in Frameworks */,
+				A10000000000000000000016 /* ScreenCaptureKit.framework in Frameworks */,
+				A10000000000000000000017 /* SwiftUI.framework in Frameworks */,
+				A10000000000000000000018 /* CoreAudio.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A40000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				A40000000000000000000002 /* EdgePulse */,
+				A40000000000000000000003 /* Frameworks */,
+				A20000000000000000000009 /* Info.plist */,
+				A2000000000000000000000A /* README.md */,
+				A2000000000000000000000B /* ROADMAP.md */,
+				A2000000000000000000000C /* CHANGELOG.md */,
+				A40000000000000000000004 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A40000000000000000000002 /* EdgePulse */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000001 /* AudioAnalyzer.swift */,
+				A20000000000000000000002 /* CaptureLifecycle.swift */,
+				A20000000000000000000003 /* ControlPanelView.swift */,
+				A20000000000000000000004 /* EdgePulseApp.swift */,
+				A20000000000000000000005 /* OverlayManager.swift */,
+				A20000000000000000000006 /* SettingsStore.swift */,
+				A20000000000000000000007 /* SpectrumProcessor.swift */,
+				A20000000000000000000008 /* SystemAudioCapture.swift */,
+			);
+			path = Sources/EdgePulse;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000003 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000011 /* Accelerate.framework */,
+				A20000000000000000000012 /* AppKit.framework */,
+				A20000000000000000000013 /* AudioToolbox.framework */,
+				A20000000000000000000014 /* CoreGraphics.framework */,
+				A20000000000000000000015 /* CoreMedia.framework */,
+				A20000000000000000000016 /* ScreenCaptureKit.framework */,
+				A20000000000000000000017 /* SwiftUI.framework */,
+				A20000000000000000000018 /* CoreAudio.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000004 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000020 /* EdgePulse.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A50000000000000000000001 /* EdgePulse */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A90000000000000000000002 /* Build configuration list for PBXNativeTarget "EdgePulse" */;
+			buildPhases = (
+				A30000000000000000000002 /* Sources */,
+				A30000000000000000000001 /* Frameworks */,
+				A30000000000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EdgePulse;
+			productName = EdgePulse;
+			productReference = A20000000000000000000020 /* EdgePulse.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A60000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2640;
+				LastUpgradeCheck = 2640;
+				TargetAttributes = {
+					A50000000000000000000001 = {
+						CreatedOnToolsVersion = 26.4;
+					};
+				};
+			};
+			buildConfigurationList = A90000000000000000000001 /* Build configuration list for PBXProject "EdgePulse" */;
+			compatibilityVersion = "Xcode 15.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A40000000000000000000001;
+			productRefGroup = A40000000000000000000004 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A50000000000000000000001 /* EdgePulse */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A30000000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A30000000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000001 /* AudioAnalyzer.swift in Sources */,
+				A10000000000000000000002 /* CaptureLifecycle.swift in Sources */,
+				A10000000000000000000003 /* ControlPanelView.swift in Sources */,
+				A10000000000000000000004 /* EdgePulseApp.swift in Sources */,
+				A10000000000000000000005 /* OverlayManager.swift in Sources */,
+				A10000000000000000000006 /* SettingsStore.swift in Sources */,
+				A10000000000000000000007 /* SpectrumProcessor.swift in Sources */,
+				A10000000000000000000008 /* SystemAudioCapture.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A80000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A80000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A80000000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "EdgePulse Local Development";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 2;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.2.0;
+				OTHER_CODE_SIGN_FLAGS = "--keychain=$(SRCROOT)/.local-signing/EdgePulseLocal.keychain-db";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cf3i.edgepulse;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Debug;
+		};
+		A80000000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "EdgePulse Local Development";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 2;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.2.0;
+				OTHER_CODE_SIGN_FLAGS = "--keychain=$(SRCROOT)/.local-signing/EdgePulseLocal.keychain-db";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cf3i.edgepulse;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A90000000000000000000001 /* Build configuration list for PBXProject "EdgePulse" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A80000000000000000000001 /* Debug */,
+				A80000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A90000000000000000000002 /* Build configuration list for PBXNativeTarget "EdgePulse" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A80000000000000000000003 /* Debug */,
+				A80000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A60000000000000000000001 /* Project object */;
+}
