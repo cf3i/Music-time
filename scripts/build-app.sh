@@ -16,6 +16,6 @@ cp "$PROJECT_DIR/Info.plist" "$CONTENTS_DIR/Info.plist"
 cp "$BIN_DIR/EdgePulse" "$CONTENTS_DIR/MacOS/EdgePulse"
 chmod +x "$CONTENTS_DIR/MacOS/EdgePulse"
 
-codesign --force --sign - --identifier local.edgepulse.app "$APP_DIR"
+codesign --force --sign - --identifier com.cf3i.edgepulse "$APP_DIR"
 
 echo "$APP_DIR"

@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 
+@MainActor
 final class OverlayManager {
     private let analyzer: AudioAnalyzer
     private let settings: SettingsStore

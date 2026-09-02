@@ -1,12 +1,11 @@
-import AppKit
 import AudioToolbox
 import CoreGraphics
 import CoreMedia
 import Foundation
-import ScreenCaptureKit
+@preconcurrency import ScreenCaptureKit
 
-final class SystemAudioCapture: NSObject, SCStreamOutput, SCStreamDelegate {
-    enum State {
+final class SystemAudioCapture: NSObject, SCStreamOutput, SCStreamDelegate, @unchecked Sendable {
+    enum State: Sendable {
         case idle
         case starting
         case running
@@ -14,89 +13,94 @@ final class SystemAudioCapture: NSObject, SCStreamOutput, SCStreamDelegate {
         case failed(String)
     }
 
-    var onSamples: (([Float]) -> Void)?
-    var onStateChange: ((State) -> Void)?
+    var onSamples: (@Sendable ([Float], Float) -> Void)?
+    var onStateChange: (@Sendable (State) -> Void)?
 
-    private let sampleQueue = DispatchQueue(label: "local.edgepulse.audio", qos: .userInteractive)
+    private let sampleQueue = DispatchQueue(label: "com.cf3i.edgepulse.audio", qos: .userInteractive)
+    private let controlQueue = DispatchQueue(label: "com.cf3i.edgepulse.capture-control", qos: .userInitiated)
+    private let bufferListCapacity = 8
+    private let bufferListByteCount: Int
+    private let bufferListStorage: UnsafeMutableRawPointer
+    private var lifecycle = CaptureLifecycle()
     private var stream: SCStream?
-    private var isStarting = false
+    private var streamGeneration: UInt64?
+    private var startTask: Task<Void, Never>?
+
+    override init() {
+        bufferListByteCount = MemoryLayout<AudioBufferList>.size
+            + MemoryLayout<AudioBuffer>.stride * (bufferListCapacity - 1)
+        bufferListStorage = UnsafeMutableRawPointer.allocate(
+            byteCount: bufferListByteCount,
+            alignment: MemoryLayout<AudioBufferList>.alignment
+        )
+        let pointer = bufferListStorage.bindMemory(to: AudioBufferList.self, capacity: 1)
+        pointer.initialize(
+            to: AudioBufferList(
+                mNumberBuffers: 0,
+                mBuffers: AudioBuffer(mNumberChannels: 0, mDataByteSize: 0, mData: nil)
+            )
+        )
+        super.init()
+    }
+
+    deinit {
+        bufferListStorage.deallocate()
+    }
 
     func start() {
-        guard stream == nil, !isStarting else { return }
-        isStarting = true
-        onStateChange?(.starting)
-
-        Task { [weak self] in
-            guard let self else { return }
-
-            guard CGPreflightScreenCaptureAccess() || CGRequestScreenCaptureAccess() else {
-                self.isStarting = false
-                self.onStateChange?(.permissionRequired)
+        controlQueue.async { [weak self] in
+            guard let self,
+                  let token = self.lifecycle.requestStart() else {
                 return
             }
 
-            do {
-                let availableContent = try await SCShareableContent.excludingDesktopWindows(
-                    true,
-                    onScreenWindowsOnly: true
-                )
-                guard let display = self.preferredDisplay(from: availableContent.displays) else {
-                    throw CaptureError.noDisplay
-                }
-
-                let filter = SCContentFilter(
-                    display: display,
-                    excludingApplications: [],
-                    exceptingWindows: []
-                )
-                let configuration = SCStreamConfiguration()
-                configuration.capturesAudio = true
-                configuration.excludesCurrentProcessAudio = true
-                configuration.sampleRate = 48_000
-                configuration.channelCount = 2
-                configuration.width = 2
-                configuration.height = 2
-                configuration.minimumFrameInterval = CMTime(value: 1, timescale: 2)
-                configuration.queueDepth = 3
-                configuration.showsCursor = false
-
-                let newStream = SCStream(filter: filter, configuration: configuration, delegate: self)
-                try newStream.addStreamOutput(self, type: .audio, sampleHandlerQueue: self.sampleQueue)
-                try await newStream.startCapture()
-
-                self.stream = newStream
-                self.isStarting = false
-                self.onStateChange?(.running)
-            } catch {
-                self.isStarting = false
-                self.stream = nil
-                self.onStateChange?(.failed(error.localizedDescription))
+            self.emit(.starting)
+            let task = Task<Void, Never> { [weak self] in
+                guard let self else { return }
+                await self.startCapture(generation: token)
             }
+            self.startTask = task
         }
     }
 
     func stop() {
-        isStarting = false
-        guard let activeStream = stream else {
-            onStateChange?(.idle)
-            return
-        }
-        stream = nil
+        controlQueue.async { [weak self] in
+            guard let self else { return }
 
-        Task { [weak self] in
-            do {
-                try await activeStream.stopCapture()
-            } catch {
-                // The stream may already have stopped as part of shutdown.
+            self.lifecycle.requestStop()
+            self.startTask?.cancel()
+            self.startTask = nil
+
+            let activeStream = self.stream
+            self.stream = nil
+            self.streamGeneration = nil
+            self.emit(.idle)
+
+            guard let activeStream else { return }
+            Task {
+                try? await activeStream.stopCapture()
             }
-            self?.onStateChange?(.idle)
         }
     }
 
-    func stream(_ stream: SCStream, didStopWithError error: Error) {
-        self.stream = nil
-        isStarting = false
-        onStateChange?(.failed(error.localizedDescription))
+    func restart() {
+        stop()
+        start()
+    }
+
+    func stream(_ stoppedStream: SCStream, didStopWithError error: Error) {
+        controlQueue.async { [weak self] in
+            guard let self,
+                  self.stream === stoppedStream,
+                  let token = self.streamGeneration,
+                  self.lifecycle.activeStreamStopped(token: token) else {
+                return
+            }
+
+            self.stream = nil
+            self.streamGeneration = nil
+            self.emit(.failed(error.localizedDescription))
+        }
     }
 
     func stream(
@@ -116,21 +120,10 @@ final class SystemAudioCapture: NSObject, SCStreamOutput, SCStreamDelegate {
         }
 
         let maximumBuffers = Int(max(1, basicDescription.mChannelsPerFrame))
-        let bufferListByteCount = MemoryLayout<AudioBufferList>.size
-            + MemoryLayout<AudioBuffer>.stride * (maximumBuffers - 1)
-        let bufferListStorage = UnsafeMutableRawPointer.allocate(
-            byteCount: bufferListByteCount,
-            alignment: MemoryLayout<AudioBufferList>.alignment
-        )
-        defer { bufferListStorage.deallocate() }
+        guard maximumBuffers <= bufferListCapacity else { return }
 
         let bufferListPointer = bufferListStorage.bindMemory(to: AudioBufferList.self, capacity: 1)
-        bufferListPointer.initialize(
-            to: AudioBufferList(
-                mNumberBuffers: 0,
-                mBuffers: AudioBuffer(mNumberChannels: 0, mDataByteSize: 0, mData: nil)
-            )
-        )
+        bufferListPointer.pointee.mNumberBuffers = 0
 
         var retainedBlockBuffer: CMBlockBuffer?
         let status = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(
@@ -146,7 +139,6 @@ final class SystemAudioCapture: NSObject, SCStreamOutput, SCStreamDelegate {
         guard status == noErr else { return }
 
         let bufferList = UnsafeMutableAudioBufferListPointer(bufferListPointer)
-
         let frameCount = CMSampleBufferGetNumSamples(sampleBuffer)
         let channelCount = Int(max(1, basicDescription.mChannelsPerFrame))
         var mono = [Float](repeating: 0, count: frameCount)
@@ -179,23 +171,96 @@ final class SystemAudioCapture: NSObject, SCStreamOutput, SCStreamDelegate {
             }
         }
 
-        onSamples?(mono)
+        onSamples?(mono, Float(basicDescription.mSampleRate))
+    }
+
+    private func startCapture(generation token: UInt64) async {
+        guard !Task.isCancelled, isCurrent(token) else { return }
+
+        guard CGPreflightScreenCaptureAccess() || CGRequestScreenCaptureAccess() else {
+            controlQueue.async { [weak self] in
+                guard let self,
+                      self.lifecycle.permissionWasDenied(token: token) else {
+                    return
+                }
+                self.startTask = nil
+                self.emit(.permissionRequired)
+            }
+            return
+        }
+
+        do {
+            let availableContent = try await SCShareableContent.excludingDesktopWindows(
+                true,
+                onScreenWindowsOnly: true
+            )
+            try Task.checkCancellation()
+            guard isCurrent(token),
+                  let display = preferredDisplay(from: availableContent.displays) else {
+                return
+            }
+
+            let filter = SCContentFilter(
+                display: display,
+                excludingApplications: [],
+                exceptingWindows: []
+            )
+            let configuration = SCStreamConfiguration()
+            configuration.capturesAudio = true
+            configuration.excludesCurrentProcessAudio = true
+            configuration.sampleRate = 48_000
+            configuration.channelCount = 2
+            configuration.width = 2
+            configuration.height = 2
+            configuration.minimumFrameInterval = CMTime(value: 1, timescale: 2)
+            configuration.queueDepth = 3
+            configuration.showsCursor = false
+
+            let candidateStream = SCStream(filter: filter, configuration: configuration, delegate: self)
+            try candidateStream.addStreamOutput(self, type: .audio, sampleHandlerQueue: sampleQueue)
+            try Task.checkCancellation()
+            guard isCurrent(token) else { return }
+            try await candidateStream.startCapture()
+
+            controlQueue.async { [weak self] in
+                guard let self else { return }
+                self.startTask = nil
+
+                guard self.lifecycle.didStart(token: token) else {
+                    Task { try? await candidateStream.stopCapture() }
+                    return
+                }
+
+                self.stream = candidateStream
+                self.streamGeneration = token
+                self.emit(.running)
+            }
+        } catch is CancellationError {
+            // A newer start/stop intent superseded this work.
+        } catch {
+            controlQueue.async { [weak self] in
+                guard let self,
+                      self.lifecycle.didFail(token: token) else {
+                    return
+                }
+                self.startTask = nil
+                self.emit(.failed(error.localizedDescription))
+            }
+        }
+    }
+
+    private func isCurrent(_ token: UInt64) -> Bool {
+        controlQueue.sync {
+            lifecycle.accepts(token)
+        }
+    }
+
+    private func emit(_ state: State) {
+        onStateChange?(state)
     }
 
     private func preferredDisplay(from displays: [SCDisplay]) -> SCDisplay? {
-        let mainDisplayID = (NSScreen.main?.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber)?
-            .uint32Value
+        let mainDisplayID = CGMainDisplayID()
         return displays.first(where: { $0.displayID == mainDisplayID }) ?? displays.first
-    }
-}
-
-private enum CaptureError: LocalizedError {
-    case noDisplay
-
-    var errorDescription: String? {
-        switch self {
-        case .noDisplay:
-            return "No active display was found."
-        }
     }
 }

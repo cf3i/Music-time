@@ -32,14 +32,20 @@ struct ControlPanelView: View {
                 .toggleStyle(.switch)
 
             controlRow("Opacity", value: "\(Int(settings.opacity * 100))%") {
-                Slider(value: $settings.opacity, in: 0.1...1.0)
+                Slider(
+                    value: Binding(
+                        get: { settings.opacity },
+                        set: { settings.setOpacity($0) }
+                    ),
+                    in: 0.1...1.0
+                )
             }
 
             controlRow("Density", value: "\(settings.density)") {
                 Slider(
                     value: Binding(
                         get: { Double(settings.density) },
-                        set: { settings.density = Int($0.rounded()) }
+                        set: { settings.setDensity(Int($0.rounded())) }
                     ),
                     in: 16...128,
                     step: 8
@@ -47,11 +53,23 @@ struct ControlPanelView: View {
             }
 
             controlRow("Amplitude", value: "\(Int(settings.amplitude * 100))%") {
-                Slider(value: $settings.amplitude, in: 0.25...2.0)
+                Slider(
+                    value: Binding(
+                        get: { settings.amplitude },
+                        set: { settings.setAmplitude($0) }
+                    ),
+                    in: 0.25...2.0
+                )
             }
 
             controlRow("Smoothing", value: "\(Int(settings.smoothing * 100))%") {
-                Slider(value: $settings.smoothing, in: 0...0.95)
+                Slider(
+                    value: Binding(
+                        get: { settings.smoothing },
+                        set: { settings.setSmoothing($0) }
+                    ),
+                    in: 0...0.95
+                )
             }
 
             if model.needsPermission {

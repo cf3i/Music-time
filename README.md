@@ -1,6 +1,6 @@
 # EdgePulse
 
-EdgePulse is a menu-bar-only macOS audio visualizer. It listens to system audio with ScreenCaptureKit and draws a click-through, always-on-top white spectrum along the bottom edge of every display.
+EdgePulse is a menu-bar-only macOS audio visualizer. It listens to system audio with ScreenCaptureKit and draws a click-through, always-on-top white spectrum along the bottom edge of every display. Audio is analyzed locally and is never recorded or uploaded.
 
 ## Requirements
 
@@ -29,10 +29,24 @@ Settings persist automatically in `UserDefaults`.
 
 ## Development
 
+Run the full unit test suite:
+
+```bash
+swift test
+```
+
+Create an optimized local build:
+
+```bash
+./scripts/build-app.sh release
+```
+
 For a fast compile check without packaging:
 
 ```bash
 swift build
 ```
 
-The app bundle is ad-hoc signed so macOS can associate privacy permission with a stable bundle identifier. If you move or rebuild the app and macOS asks again, approve the new build in System Settings.
+The local app bundle is ad-hoc signed as `com.cf3i.edgepulse` so macOS can associate privacy permission with a stable bundle identifier. If you move or rebuild the app and macOS asks again, approve the new build in System Settings.
+
+See [ROADMAP.md](ROADMAP.md) for the path from the current core-stability work to the public beta.
