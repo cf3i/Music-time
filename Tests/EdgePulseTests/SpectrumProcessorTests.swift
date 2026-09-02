@@ -71,6 +71,28 @@ final class SpectrumProcessorTests: XCTestCase {
         XCTAssertLessThanOrEqual(abs(band48k - band44k), 2)
     }
 
+    func testProcessesOneMinuteOfAudioFasterThanRealTime() {
+        let processor = SpectrumProcessor()
+        let chunk = sineWave(
+            frequency: 750,
+            sampleCount: processor.hopSize,
+            sampleRate: sampleRate
+        )
+        let chunkCount = Int(ceil(Double(sampleRate * 60) / Double(processor.hopSize)))
+        let startedAt = ProcessInfo.processInfo.systemUptime
+        var latest: [Float]?
+
+        for _ in 0..<chunkCount {
+            if let output = processor.process(samples: chunk, sampleRate: sampleRate, smoothing: 0.72) {
+                latest = output
+            }
+        }
+
+        let elapsed = ProcessInfo.processInfo.systemUptime - startedAt
+        XCTAssertNotNil(latest)
+        XCTAssertLessThan(elapsed, 5, "Spectrum analysis must retain at least 12× real-time headroom")
+    }
+
     private func dominantBand(for frequency: Float) throws -> (index: Int, level: Float) {
         let processor = SpectrumProcessor()
         let samples = sineWave(frequency: frequency, sampleCount: 12_288, sampleRate: sampleRate)
