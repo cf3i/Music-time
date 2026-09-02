@@ -73,12 +73,18 @@ struct ControlPanelView: View {
             }
 
             if model.needsPermission {
-                Button("Open Privacy Settings") {
-                    model.openScreenRecordingSettings()
-                }
-                .buttonStyle(.borderedProminent)
+                HStack {
+                    Button("Open Privacy Settings") {
+                        model.openScreenRecordingSettings()
+                    }
+                    .buttonStyle(.borderedProminent)
 
-                Text("Allow EdgePulse under Screen & System Audio Recording, then quit and reopen it.")
+                    Button("Try Again") {
+                        model.retryCaptureAfterPermissionChange()
+                    }
+                }
+
+                Text("In Privacy Settings, turn on EdgePulse under System Audio Recording Only, then return here and choose Try Again.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)

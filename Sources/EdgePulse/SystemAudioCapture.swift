@@ -177,7 +177,10 @@ final class SystemAudioCapture: NSObject, SCStreamOutput, SCStreamDelegate, @unc
     private func startCapture(generation token: UInt64) async {
         guard !Task.isCancelled, isCurrent(token) else { return }
 
-        guard CGPreflightScreenCaptureAccess() || CGRequestScreenCaptureAccess() else {
+        let hasPermission = await MainActor.run {
+            CGPreflightScreenCaptureAccess() || CGRequestScreenCaptureAccess()
+        }
+        guard hasPermission else {
             controlQueue.async { [weak self] in
                 guard let self,
                       self.lifecycle.permissionWasDenied(token: token) else {
@@ -239,14 +242,29 @@ final class SystemAudioCapture: NSObject, SCStreamOutput, SCStreamDelegate, @unc
             // A newer start/stop intent superseded this work.
         } catch {
             controlQueue.async { [weak self] in
-                guard let self,
-                      self.lifecycle.didFail(token: token) else {
-                    return
+                guard let self else { return }
+
+                let transitioned: Bool
+                let state: State
+                if self.isPermissionDenied(error) {
+                    transitioned = self.lifecycle.permissionWasDenied(token: token)
+                    state = .permissionRequired
+                } else {
+                    transitioned = self.lifecycle.didFail(token: token)
+                    state = .failed(error.localizedDescription)
                 }
+
+                guard transitioned else { return }
                 self.startTask = nil
-                self.emit(.failed(error.localizedDescription))
+                self.emit(state)
             }
         }
+    }
+
+    private func isPermissionDenied(_ error: Error) -> Bool {
+        let cocoaError = error as NSError
+        // SCStreamErrorUserDeclined is -3801 in ScreenCaptureKit.
+        return cocoaError.domain == SCStreamErrorDomain && cocoaError.code == -3_801
     }
 
     private func isCurrent(_ token: UInt64) -> Bool {

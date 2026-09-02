@@ -49,6 +49,8 @@ For a fast compile check without packaging:
 swift build
 ```
 
-The local app bundle is ad-hoc signed as `com.cf3i.edgepulse` so macOS can associate privacy permission with a stable bundle identifier. If you move or rebuild the app and macOS asks again, approve the new build in System Settings.
+The local app bundle uses an ad-hoc signature with an explicit stable designated requirement for `com.cf3i.edgepulse`. This keeps Screen & System Audio permission stable across local rebuilds. A production build must use an Apple Development or Developer ID identity instead; set `EDGEPULSE_SIGNING_IDENTITY` when invoking the build script to select one.
+
+On macOS 26, System Settings separates **System Audio Recording Only** from broader screen recording access. Turn on EdgePulse in that lower list, return to the menu-bar panel, and choose **Try Again**. The app does not need microphone access.
 
 See [ROADMAP.md](ROADMAP.md) for the path from the current core-stability work to the public beta.

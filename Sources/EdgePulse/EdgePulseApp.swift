@@ -120,6 +120,15 @@ final class AppModel: ObservableObject {
         NSWorkspace.shared.open(url)
     }
 
+    func retryCaptureAfterPermissionChange() {
+        guard settings.enabled else { return }
+        retryTask?.cancel()
+        retryAttempt = 0
+        needsPermission = false
+        status = "Checking system audio permission…"
+        capture.start()
+    }
+
     private func setEnabled(_ enabled: Bool) {
         logger.info("Enabled changed to \(enabled, privacy: .public)")
         if enabled {
@@ -161,7 +170,7 @@ final class AppModel: ObservableObject {
         case .permissionRequired:
             logger.notice("Capture state: permission required")
             retryTask?.cancel()
-            status = "Screen & System Audio permission required"
+            status = "System audio permission required"
             needsPermission = true
         case .failed(let message):
             logger.error("Capture state: failed — \(message, privacy: .public)")

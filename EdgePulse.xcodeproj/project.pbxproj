@@ -37,6 +37,7 @@
 		A2000000000000000000000A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A2000000000000000000000B /* ROADMAP.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ROADMAP.md; sourceTree = "<group>"; };
 		A2000000000000000000000C /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		A2000000000000000000000D /* EdgePulse.requirements */ = {isa = PBXFileReference; lastKnownFileType = text; path = EdgePulse.requirements; sourceTree = "<group>"; };
 		A20000000000000000000011 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		A20000000000000000000012 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		A20000000000000000000013 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -69,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				A40000000000000000000002 /* EdgePulse */,
+				A40000000000000000000005 /* Config */,
 				A40000000000000000000003 /* Frameworks */,
 				A20000000000000000000009 /* Info.plist */,
 				A2000000000000000000000A /* README.md */,
@@ -113,6 +115,14 @@
 				A20000000000000000000020 /* EdgePulse.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000005 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				A2000000000000000000000D /* EdgePulse.requirements */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -250,6 +260,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.2.0;
+				OTHER_CODE_SIGN_FLAGS = "--requirements=$(SRCROOT)/Config/EdgePulse.requirements";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cf3i.edgepulse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_STRICT_CONCURRENCY = complete;
@@ -271,6 +282,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.2.0;
+				OTHER_CODE_SIGN_FLAGS = "--requirements=$(SRCROOT)/Config/EdgePulse.requirements";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cf3i.edgepulse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_STRICT_CONCURRENCY = complete;
