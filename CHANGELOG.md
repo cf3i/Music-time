@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.0 — 2026-09-03
+
+### Added
+
+- A continuous, glow-layered Wave renderer alongside the original Bars renderer
+- Bottom, top, left, right, and four-edge placement with live overlay rebuilding
+- Per-display targeting for multi-monitor setups
+- Renderer-ready bass, mid, high-frequency, overall-energy, and kick-onset features
+- Bass-driven halo breathing, kick edge pulses, and animated high-frequency shimmer
+- Automatic gain that gently balances quiet and loud source material
+
+### Changed
+
+- Evolved the menu-bar panel into the Flow layout with visualizer, edge, display, and gain controls
+- Made all renderer geometry orientation-aware while keeping every overlay click-through and Space-aware
+- Paused continuous shimmer rendering during silence and under Reduce Motion
+
 ## 0.3.0 — 2026-09-03
 
 ### Added

@@ -249,7 +249,7 @@
 				CODE_SIGN_IDENTITY = "EdgePulse Local Development";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Info.plist;
@@ -257,7 +257,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.3.0;
+				MARKETING_VERSION = 0.4.0;
 				OTHER_CODE_SIGN_FLAGS = "--keychain=$(SRCROOT)/.local-signing/EdgePulseLocal.keychain-db";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cf3i.edgepulse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -271,7 +271,7 @@
 				CODE_SIGN_IDENTITY = "EdgePulse Local Development";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Info.plist;
@@ -279,7 +279,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.3.0;
+				MARKETING_VERSION = 0.4.0;
 				OTHER_CODE_SIGN_FLAGS = "--keychain=$(SRCROOT)/.local-signing/EdgePulseLocal.keychain-db";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cf3i.edgepulse;
 				PRODUCT_NAME = "$(TARGET_NAME)";

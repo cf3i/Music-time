@@ -25,6 +25,7 @@ final class SpectrumProcessor {
     private var normalized: [Float]
     private var smoothed: [Float]
     private var bandRanges: [Range<Int>] = []
+    private var adaptiveGain: Float = 1
 
     init(
         fftSize: Int = 4_096,
@@ -66,7 +67,12 @@ final class SpectrumProcessor {
     }
 
     /// Returns the newest spectrum if this batch crossed one or more analysis hops.
-    func process(samples: [Float], sampleRate: Float, smoothing: Float) -> [Float]? {
+    func process(
+        samples: [Float],
+        sampleRate: Float,
+        smoothing: Float,
+        automaticGain: Bool = false
+    ) -> [Float]? {
         guard !samples.isEmpty else { return nil }
         updateConfiguration(sampleRate: sampleRate, smoothing: smoothing)
 
@@ -84,7 +90,7 @@ final class SpectrumProcessor {
 
             samplesSinceAnalysis = 0
             copyChronologicalFrame()
-            analyzeCurrentFrame()
+            analyzeCurrentFrame(automaticGain: automaticGain)
             didAnalyze = true
         }
         return didAnalyze ? smoothed : nil
@@ -103,6 +109,7 @@ final class SpectrumProcessor {
         normalized.withUnsafeMutableBufferPointer {
             $0.baseAddress?.update(repeating: 0, count: $0.count)
         }
+        adaptiveGain = 1
     }
 
     private func updateConfiguration(sampleRate: Float, smoothing: Float) {
@@ -126,7 +133,18 @@ final class SpectrumProcessor {
         }
     }
 
-    private func analyzeCurrentFrame() {
+    private func analyzeCurrentFrame(automaticGain: Bool) {
+        var meanSquare: Float = 0
+        vDSP_measqv(frame, 1, &meanSquare, vDSP_Length(fftSize))
+        if meanSquare < 0.000_000_006_4 {
+            normalized.withUnsafeMutableBufferPointer {
+                $0.baseAddress?.update(repeating: 0, count: $0.count)
+            }
+            adaptiveGain = 1
+            applySmoothing()
+            return
+        }
+
         vDSP_vmul(frame, 1, window, 1, &windowed, 1, vDSP_Length(fftSize))
 
         real.withUnsafeMutableBufferPointer { realBuffer in
@@ -172,6 +190,25 @@ final class SpectrumProcessor {
             normalized[band] = min(1, max(0, compressed * 1.28))
         }
 
+        if automaticGain {
+            let framePeak = normalized.max() ?? 0
+            let targetGain = min(3.6, max(0.72, 0.74 / max(0.035, framePeak)))
+            let response: Float = targetGain < adaptiveGain ? 0.48 : 0.055
+            adaptiveGain += (targetGain - adaptiveGain) * response
+        } else {
+            adaptiveGain = 1
+        }
+
+        if adaptiveGain != 1 {
+            for index in 0..<bandCount {
+                normalized[index] = min(1, normalized[index] * adaptiveGain)
+            }
+        }
+
+        applySmoothing()
+    }
+
+    private func applySmoothing() {
         for index in 0..<bandCount {
             let target = normalized[index]
             let previous = smoothed[index]

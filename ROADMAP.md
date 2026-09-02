@@ -19,7 +19,7 @@ The runnable MVP is tagged `v0.1.0-mvp`. The next five milestones intentionally 
 - Theme presets and polished app/menu-bar icons
 - Light, dark, accessibility, and reduced-motion treatments
 
-## v0.4.0 — Flow
+## v0.4.0 — Flow ✅
 
 - Wave renderer
 - Top, bottom, left, right, and all-edge placement

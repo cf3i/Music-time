@@ -29,6 +29,11 @@ final class EdgePulseAppDelegate: NSObject, NSApplicationDelegate {
     }
 }
 
+struct DisplayOption: Identifiable, Hashable, Sendable {
+    let id: UInt32
+    let title: String
+}
+
 @MainActor
 final class AppModel: ObservableObject {
     static let shared = AppModel()
@@ -38,6 +43,7 @@ final class AppModel: ObservableObject {
 
     @Published private(set) var status = "Starting…"
     @Published private(set) var needsPermission = false
+    @Published private(set) var availableDisplays: [DisplayOption] = []
 
     private lazy var overlays = OverlayManager(analyzer: analyzer, settings: settings)
     private lazy var capture = SystemAudioCapture()
@@ -49,9 +55,17 @@ final class AppModel: ObservableObject {
     private var isSleeping = false
 
     private init() {
+        reloadDisplays()
+
         settings.$smoothing
             .sink { [weak analyzer] value in
                 analyzer?.setSmoothing(Float(value))
+            }
+            .store(in: &cancellables)
+
+        settings.$automaticGain
+            .sink { [weak analyzer] enabled in
+                analyzer?.setAutomaticGain(enabled)
             }
             .store(in: &cancellables)
 
@@ -63,9 +77,28 @@ final class AppModel: ObservableObject {
             }
             .store(in: &cancellables)
 
+        settings.$edgePlacement
+            .dropFirst()
+            .sink { [weak self] _ in
+                guard let self, self.isActive, self.settings.enabled else { return }
+                self.overlays.rebuild()
+            }
+            .store(in: &cancellables)
+
+        settings.$selectedDisplayID
+            .dropFirst()
+            .sink { [weak self] _ in
+                guard let self, self.isActive, self.settings.enabled else { return }
+                self.overlays.rebuild()
+            }
+            .store(in: &cancellables)
+
         NotificationCenter.default.publisher(for: NSApplication.didChangeScreenParametersNotification)
             .sink { [weak self] _ in
-                guard let self, self.settings.enabled else { return }
+                guard let self else { return }
+                self.reloadDisplays()
+                self.validateSelectedDisplay()
+                guard self.settings.enabled else { return }
                 self.overlays.rebuild()
                 self.retryTask?.cancel()
                 self.capture.restart()
@@ -130,6 +163,11 @@ final class AppModel: ObservableObject {
         capture.start()
     }
 
+    var displaySummary: String {
+        guard let selectedID = settings.selectedDisplayID else { return "All displays" }
+        return availableDisplays.first(where: { $0.id == selectedID })?.title ?? "Main display"
+    }
+
     private func setEnabled(_ enabled: Bool) {
         logger.info("Enabled changed to \(enabled, privacy: .public)")
         if enabled {
@@ -148,6 +186,20 @@ final class AppModel: ObservableObject {
             overlays.hide()
             status = "Paused"
             needsPermission = false
+        }
+    }
+
+    private func reloadDisplays() {
+        availableDisplays = NSScreen.screens.compactMap { screen in
+            guard let id = screen.edgePulseDisplayID else { return nil }
+            return DisplayOption(id: id, title: screen.localizedName)
+        }
+    }
+
+    private func validateSelectedDisplay() {
+        guard let selectedID = settings.selectedDisplayID else { return }
+        if !availableDisplays.contains(where: { $0.id == selectedID }) {
+            settings.setSelectedDisplayID(nil)
         }
     }
 

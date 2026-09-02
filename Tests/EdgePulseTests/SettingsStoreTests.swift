@@ -71,4 +71,31 @@ final class SettingsStoreTests: XCTestCase {
         XCTAssertEqual(restored.density, 40)
         XCTAssertEqual(restored.glow, 1)
     }
+
+    func testFlowSettingsPersistAndInvalidValuesUseSafeDefaults() {
+        let suite = "com.cf3i.edgepulse.tests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let settings = SettingsStore(defaults: defaults)
+
+        settings.setVisualizerStyle(.wave)
+        settings.setEdgePlacement(.all)
+        settings.setAutomaticGain(false)
+        settings.setSelectedDisplayID(42)
+
+        let restored = SettingsStore(defaults: defaults)
+        XCTAssertEqual(restored.visualizerStyle, .wave)
+        XCTAssertEqual(restored.edgePlacement, .all)
+        XCTAssertFalse(restored.automaticGain)
+        XCTAssertEqual(restored.selectedDisplayID, 42)
+
+        defaults.set("unknown", forKey: "visualizerStyle")
+        defaults.set("diagonal", forKey: "edgePlacement")
+        let safe = SettingsStore(defaults: defaults)
+        XCTAssertEqual(safe.visualizerStyle, .bars)
+        XCTAssertEqual(safe.edgePlacement, .bottom)
+
+        safe.setSelectedDisplayID(nil)
+        XCTAssertNil(defaults.object(forKey: "selectedDisplayID"))
+    }
 }

@@ -1,6 +1,57 @@
 import Combine
 import Foundation
 
+enum VisualizerStyle: String, CaseIterable, Identifiable, Sendable {
+    case bars
+    case wave
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .bars: "Bars"
+        case .wave: "Wave"
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .bars: "chart.bar.fill"
+        case .wave: "waveform.path"
+        }
+    }
+}
+
+enum EdgePlacement: String, CaseIterable, Identifiable, Sendable {
+    case bottom
+    case top
+    case left
+    case right
+    case all
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .bottom: "Bottom"
+        case .top: "Top"
+        case .left: "Left"
+        case .right: "Right"
+        case .all: "All Edges"
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .bottom: "rectangle.bottomthird.inset.filled"
+        case .top: "rectangle.topthird.inset.filled"
+        case .left: "rectangle.leadingthird.inset.filled"
+        case .right: "rectangle.trailingthird.inset.filled"
+        case .all: "rectangle.inset.filled"
+        }
+    }
+}
+
 enum LumenPreset: String, CaseIterable, Identifiable, Sendable {
     case halo
     case glass
@@ -41,6 +92,10 @@ final class SettingsStore: ObservableObject {
         static let glow = "glow"
         static let barWidth = "barWidth"
         static let preset = "lumenPreset"
+        static let visualizerStyle = "visualizerStyle"
+        static let edgePlacement = "edgePlacement"
+        static let automaticGain = "automaticGain"
+        static let selectedDisplayID = "selectedDisplayID"
     }
 
     private let defaults: UserDefaults
@@ -56,6 +111,10 @@ final class SettingsStore: ObservableObject {
     @Published private(set) var glow: Double
     @Published private(set) var barWidth: Double
     @Published private(set) var preset: LumenPreset
+    @Published private(set) var visualizerStyle: VisualizerStyle
+    @Published private(set) var edgePlacement: EdgePlacement
+    @Published private(set) var automaticGain: Bool
+    @Published private(set) var selectedDisplayID: UInt32?
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -67,6 +126,10 @@ final class SettingsStore: ObservableObject {
         glow = Self.clamp(defaults.object(forKey: Key.glow) as? Double ?? 0.85, to: 0...1.0)
         barWidth = Self.clamp(defaults.object(forKey: Key.barWidth) as? Double ?? 0.62, to: 0.3...0.9)
         preset = defaults.string(forKey: Key.preset).flatMap(LumenPreset.init(rawValue:)) ?? .halo
+        visualizerStyle = defaults.string(forKey: Key.visualizerStyle).flatMap(VisualizerStyle.init(rawValue:)) ?? .bars
+        edgePlacement = defaults.string(forKey: Key.edgePlacement).flatMap(EdgePlacement.init(rawValue:)) ?? .bottom
+        automaticGain = defaults.object(forKey: Key.automaticGain) as? Bool ?? true
+        selectedDisplayID = (defaults.object(forKey: Key.selectedDisplayID) as? NSNumber)?.uint32Value
     }
 
     func setOpacity(_ value: Double) {
@@ -103,6 +166,30 @@ final class SettingsStore: ObservableObject {
         barWidth = Self.clamp(value, to: 0.3...0.9)
         defaults.set(barWidth, forKey: Key.barWidth)
         markCustom()
+    }
+
+    func setVisualizerStyle(_ value: VisualizerStyle) {
+        visualizerStyle = value
+        defaults.set(value.rawValue, forKey: Key.visualizerStyle)
+    }
+
+    func setEdgePlacement(_ value: EdgePlacement) {
+        edgePlacement = value
+        defaults.set(value.rawValue, forKey: Key.edgePlacement)
+    }
+
+    func setAutomaticGain(_ value: Bool) {
+        automaticGain = value
+        defaults.set(value, forKey: Key.automaticGain)
+    }
+
+    func setSelectedDisplayID(_ value: UInt32?) {
+        selectedDisplayID = value
+        if let value {
+            defaults.set(NSNumber(value: value), forKey: Key.selectedDisplayID)
+        } else {
+            defaults.removeObject(forKey: Key.selectedDisplayID)
+        }
     }
 
     func applyPreset(_ newPreset: LumenPreset) {

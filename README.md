@@ -1,6 +1,6 @@
 # EdgePulse
 
-EdgePulse is a menu-bar-only macOS audio visualizer. It listens to system audio and draws a click-through, always-on-top white spectrum along the bottom edge of every display. On macOS 14.2 and later it uses a Core Audio process tap, with ScreenCaptureKit retained as the macOS 13–14.1 fallback. Audio is analyzed locally and is never recorded or uploaded.
+EdgePulse is a menu-bar-only macOS audio visualizer. It listens to system audio and draws click-through, always-on-top white bars or a fluid wave on any combination of screen edges. On macOS 14.2 and later it uses a Core Audio process tap, with ScreenCaptureKit retained as the macOS 13–14.1 fallback. Audio is analyzed locally and is never recorded or uploaded.
 
 ## Requirements
 
@@ -22,12 +22,18 @@ On macOS 14.2 and later, allow EdgePulse under **System Audio Recording Only**. 
 
 - **Enabled** starts or stops capture and shows or hides the overlay.
 - **Look** applies the Halo, Glass, or Pulse visual preset.
+- **Visualizer** switches between glowing Bars and a continuous Wave.
+- **Edge** places the visualizer on the bottom, top, left, right, or every edge.
+- **Display** targets all connected displays or one selected display.
+- **Automatic gain** balances quiet and loud sources without manual tuning.
 - **Opacity** changes the brightness/transparency of the whole overlay.
 - **Density** changes the number of frequency bars (16–128).
 - **Amplitude** changes their maximum height.
 - **Smoothing** changes how quickly bars decay.
 - **Glow** changes the ambient halo and bloom strength.
 - **Bar width** changes the geometry and spacing of the spectrum.
+
+The ambient halo breathes with bass, kick onsets pulse the full edge, and high frequencies add a fine moving shimmer. Reduce Motion disables continuous movement automatically.
 
 Settings persist automatically in `UserDefaults`.
 

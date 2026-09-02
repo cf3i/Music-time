@@ -93,6 +93,54 @@ final class SpectrumProcessorTests: XCTestCase {
         XCTAssertLessThan(elapsed, 5, "Spectrum analysis must retain at least 12× real-time headroom")
     }
 
+    func testAutomaticGainRaisesQuietMaterialWithoutClipping() throws {
+        let samples = sineWave(
+            frequency: 440,
+            amplitude: 0.0015,
+            sampleCount: 20_480,
+            sampleRate: sampleRate
+        )
+        let fixedProcessor = SpectrumProcessor()
+        let adaptiveProcessor = SpectrumProcessor()
+
+        let fixed = try XCTUnwrap(
+            fixedProcessor.process(
+                samples: samples,
+                sampleRate: sampleRate,
+                smoothing: 0,
+                automaticGain: false
+            )
+        )
+        let adaptive = try XCTUnwrap(
+            adaptiveProcessor.process(
+                samples: samples,
+                sampleRate: sampleRate,
+                smoothing: 0,
+                automaticGain: true
+            )
+        )
+
+        XCTAssertGreaterThan(adaptive.max() ?? 0, (fixed.max() ?? 0) * 1.25)
+        XCTAssertLessThanOrEqual(adaptive.max() ?? 2, 1)
+    }
+
+    func testAutomaticGainDoesNotAmplifySubAudibleDigitalNoise() throws {
+        let processor = SpectrumProcessor()
+        let noise = (0..<12_288).map { index in
+            index.isMultiple(of: 2) ? Float(0.000_02) : Float(-0.000_02)
+        }
+        let spectrum = try XCTUnwrap(
+            processor.process(
+                samples: noise,
+                sampleRate: sampleRate,
+                smoothing: 0,
+                automaticGain: true
+            )
+        )
+
+        XCTAssertEqual(spectrum.max(), 0)
+    }
+
     private func dominantBand(for frequency: Float) throws -> (index: Int, level: Float) {
         let processor = SpectrumProcessor()
         let samples = sineWave(frequency: frequency, sampleCount: 12_288, sampleRate: sampleRate)
@@ -105,12 +153,13 @@ final class SpectrumProcessorTests: XCTestCase {
 
     private func sineWave(
         frequency: Float,
+        amplitude: Float = 0.8,
         sampleCount: Int,
         sampleRate: Float
     ) -> [Float] {
         (0..<sampleCount).map { sample in
             let phase = 2 * Float.pi * frequency * Float(sample) / sampleRate
-            return sin(phase) * 0.8
+            return sin(phase) * amplitude
         }
     }
 }

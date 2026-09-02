@@ -11,20 +11,23 @@ struct ControlPanelView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            header
-            enabledCard
-            presetSection
-            controlsCard
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 16) {
+                header
+                enabledCard
+                flowSection
+                presetSection
+                controlsCard
 
-            if model.needsPermission {
-                permissionCard
+                if model.needsPermission {
+                    permissionCard
+                }
+
+                footer
             }
-
-            footer
+            .padding(18)
         }
-        .padding(18)
-        .frame(width: 360)
+        .frame(width: 376, height: 680)
         .background {
             ZStack {
                 Rectangle().fill(.ultraThinMaterial)
@@ -49,7 +52,7 @@ struct ControlPanelView: View {
                 HStack(spacing: 7) {
                     Text("EdgePulse")
                         .font(.system(size: 16, weight: .semibold, design: .rounded))
-                    Text("LUMEN")
+                    Text("FLOW")
                         .font(.system(size: 8, weight: .bold, design: .rounded))
                         .tracking(1.1)
                         .padding(.horizontal, 6)
@@ -72,6 +75,113 @@ struct ControlPanelView: View {
             Spacer()
         }
         .accessibilityElement(children: .combine)
+    }
+
+    private var flowSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionLabel("VISUALIZER", trailing: settings.visualizerStyle.title)
+
+            HStack(spacing: 7) {
+                ForEach(VisualizerStyle.allCases) { style in
+                    Button {
+                        settings.setVisualizerStyle(style)
+                    } label: {
+                        Label(style.title, systemImage: style.symbol)
+                            .font(.caption.weight(.medium))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 9)
+                            .foregroundStyle(settings.visualizerStyle == style ? .primary : .secondary)
+                            .background(
+                                settings.visualizerStyle == style
+                                    ? Color.primary.opacity(0.105)
+                                    : Color.primary.opacity(0.035),
+                                in: RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            )
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                    .stroke(
+                                        .primary.opacity(settings.visualizerStyle == style ? 0.14 : 0.055),
+                                        lineWidth: 0.5
+                                    )
+                            }
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Use \(style.title) visualizer")
+                }
+            }
+
+            VStack(spacing: 0) {
+                settingPickerRow(
+                    title: "Edge",
+                    symbol: settings.edgePlacement.symbol,
+                    value: settings.edgePlacement.title
+                ) {
+                    ForEach(EdgePlacement.allCases) { placement in
+                        Button {
+                            settings.setEdgePlacement(placement)
+                        } label: {
+                            Label(placement.title, systemImage: placement.symbol)
+                        }
+                    }
+                }
+
+                Divider().padding(.leading, 32).opacity(0.55)
+
+                settingPickerRow(
+                    title: "Display",
+                    symbol: "display",
+                    value: model.displaySummary
+                ) {
+                    Button {
+                        settings.setSelectedDisplayID(nil)
+                    } label: {
+                        Label("All Displays", systemImage: "rectangle.on.rectangle")
+                    }
+                    Divider()
+                    ForEach(model.availableDisplays) { display in
+                        Button {
+                            settings.setSelectedDisplayID(display.id)
+                        } label: {
+                            Label(display.title, systemImage: "display")
+                        }
+                    }
+                }
+
+                Divider().padding(.leading, 32).opacity(0.55)
+
+                HStack(spacing: 8) {
+                    Image(systemName: "dial.high.fill")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 16)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Automatic gain")
+                            .font(.caption)
+                        Text("Keeps quiet and loud audio balanced")
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                    }
+                    Spacer()
+                    Toggle(
+                        "Automatic gain",
+                        isOn: Binding(
+                            get: { settings.automaticGain },
+                            set: { settings.setAutomaticGain($0) }
+                        )
+                    )
+                    .labelsHidden()
+                    .toggleStyle(.switch)
+                    .controlSize(.small)
+                }
+                .padding(.horizontal, 11)
+                .padding(.vertical, 9)
+            }
+            .background(.primary.opacity(0.035), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(.primary.opacity(0.055), lineWidth: 0.5)
+            }
+        }
     }
 
     private var enabledCard: some View {
@@ -182,8 +292,8 @@ struct ControlPanelView: View {
             )
 
             LumenSlider(
-                title: "Bar width",
-                symbol: "rectangle.split.3x1",
+                title: settings.visualizerStyle == .bars ? "Bar width" : "Wave weight",
+                symbol: settings.visualizerStyle == .bars ? "rectangle.split.3x1" : "scribble.variable",
                 valueText: "\(Int(settings.barWidth * 100))%",
                 value: Binding(get: { settings.barWidth }, set: { settings.setBarWidth($0) }),
                 range: 0.3...0.9
@@ -226,9 +336,13 @@ struct ControlPanelView: View {
 
     private var footer: some View {
         HStack {
-            Label("Bars · Bottom · All displays", systemImage: "rectangle.bottomthird.inset.filled")
+            Label(
+                "\(settings.visualizerStyle.title) · \(settings.edgePlacement.title) · \(model.displaySummary)",
+                systemImage: settings.edgePlacement.symbol
+            )
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
+                .lineLimit(1)
             Spacer()
             Button("Quit") {
                 NSApp.terminate(nil)
@@ -256,6 +370,40 @@ struct ControlPanelView: View {
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
         }
+    }
+
+    private func settingPickerRow<PickerContent: View>(
+        title: String,
+        symbol: String,
+        value: String,
+        @ViewBuilder picker: () -> PickerContent
+    ) -> some View {
+        Menu {
+            picker()
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: symbol)
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 16)
+                Text(title)
+                    .font(.caption)
+                Spacer()
+                Text(value)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.system(size: 8, weight: .semibold))
+                    .foregroundStyle(.tertiary)
+            }
+            .contentShape(Rectangle())
+            .padding(.horizontal, 11)
+            .padding(.vertical, 9)
+        }
+        .menuStyle(.borderlessButton)
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(title), \(value)")
     }
 }
 
