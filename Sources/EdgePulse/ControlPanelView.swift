@@ -407,22 +407,6 @@ struct ControlPanelView: View {
     }
 }
 
-struct MenuBarPulseIcon: View {
-    private let heights: [CGFloat] = [5, 10, 7, 13, 8]
-
-    var body: some View {
-        HStack(alignment: .center, spacing: 1.5) {
-            ForEach(Array(heights.enumerated()), id: \.offset) { _, height in
-                Capsule(style: .continuous)
-                    .fill(.primary)
-                    .frame(width: 2, height: height)
-            }
-        }
-        .frame(width: 18, height: 15)
-        .accessibilityHidden(true)
-    }
-}
-
 private struct LumenMark: View {
     private let heights: [CGFloat] = [8, 15, 11, 20, 13]
 

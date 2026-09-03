@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1 — 2026-09-03
+
+### Fixed
+
+- Restored the native monochrome waveform menu-bar icon so it renders crisply in light, dark, and highlighted menu-bar states
+
 ## 0.4.0 — 2026-09-03
 
 ### Added
